@@ -1,19 +1,6 @@
-from flask import Flask, render_template, request
+from app import create_app
 
-app = Flask(
-    __name__,
-    template_folder='app/templates',
-    static_folder='app/static'
-)
+app = create_app()
 
-
-@app.route('/')
-def home():
-    return "hombres trabajando"
-
-@app.route('/denuncias', methods=['GET', 'POST'])
-def denuncias():
-    return render_template('contenido/denuncias.html')
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True)

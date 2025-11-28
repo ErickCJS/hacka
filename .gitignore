@@ -1,2 +1,4 @@
 myvirtualenv/
 .venv/
+__pycache__/
+*.pyc
