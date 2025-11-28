@@ -1,49 +1,57 @@
-const form = document.getElementById("formDenuncia");
-const alerta = document.getElementById("alerta");
+document.addEventListener("DOMContentLoaded", () => {
 
-// Validación rápida
-function validarFormulario() {
-    const campos = ["nombre", "correo", "telefono", "tipo", "descripcion"];
-    let valido = true;
+    const form = document.getElementById("formDenuncia");
+    const alerta = document.getElementById("alerta");
 
-    campos.forEach(campo => {
-        const input = form[campo];
+    function validarFormulario() {
 
-        if (!input.value.trim()) {
-            input.classList.add("is-invalid");
-            valido = false;
-        } else {
-            input.classList.remove("is-invalid");
-        }
-    });
+        const campos = ["numero_placa", "color", "tipo", "telefono"];
 
-    return valido;
-}
+        let valido = true;
 
-form.addEventListener("submit", (e) => {
-    e.preventDefault();
+        campos.forEach(campo => {
 
-    if (!validarFormulario()) {
-        return;
+            const input = form[campo];
+
+            if (!input) return;
+
+            if (!input.value.trim()) {
+                input.classList.add("is-invalid");
+                valido = false;
+            } else {
+                input.classList.remove("is-invalid");
+            }
+
+        });
+
+        return valido;
     }
 
-    // Mostrar alerta elegante
-    alerta.classList.remove("d-none");
-    alerta.classList.add("show");
+    form.addEventListener("submit", (e) => {
+        e.preventDefault();
 
-    // Animación suave
-    alerta.style.opacity = "0";
-    setTimeout(() => {
-        alerta.style.transition = "opacity .4s ease";
-        alerta.style.opacity = "1";
-    }, 50);
+        if (!validarFormulario()) {
+            return;
+        }
 
-    // Limpiar formulario
-    form.reset();
+        // Mostrar alerta animada
+        alerta.classList.remove("d-none");
+        alerta.classList.add("show");
 
-    // Ocultar alerta después de 4 segundos
-    setTimeout(() => {
         alerta.style.opacity = "0";
-        setTimeout(() => alerta.classList.add("d-none"), 400);
-    }, 4000);
+        setTimeout(() => {
+            alerta.style.transition = "opacity .4s ease";
+            alerta.style.opacity = "1";
+        }, 50);
+
+        // Resetear formulario
+        form.reset();
+
+        // Ocultar alerta suave
+        setTimeout(() => {
+            alerta.style.opacity = "0";
+            setTimeout(() => alerta.classList.add("d-none"), 400);
+        }, 4000);
+    });
+
 });
