@@ -1,6 +1,11 @@
 from flask import Flask, render_template, request
 
-app = Flask(__name__, template_folder='app/templates')
+app = Flask(
+    __name__,
+    template_folder='app/templates',
+    static_folder='app/static'
+)
+
 
 @app.route('/')
 def home():
