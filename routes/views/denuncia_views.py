@@ -3,7 +3,6 @@ routes/views/denuncia_views.py
 Vistas de denuncias (Frontend)
 """
 from flask import Blueprint, render_template, session, redirect, url_for
-from controladores.controlador_denuncia_carro import crear_denuncia_carro, validar_id_denuncia
 
 denuncia_views_bp = Blueprint('denuncia_views', __name__)
 
@@ -49,9 +48,5 @@ def detalle_denuncia(id):
 @denuncia_views_bp.route('/detalle/<id>/editar')
 @require_login
 def detalle_denuncias(id):
-    id_denuncia = validar_id_denuncia(id)
-    if id_denuncia == 1:
-        return render_template('denuncias/detalle_denuncia_carro.html')
-    else:
-        return render_template('denuncias/detalle_denuncia.html', id=id, vision=True)
-        
+    """Detalle de denuncia (con edición)"""
+    return render_template('denuncias/detalle_denuncia.html', id=id, vision=True)

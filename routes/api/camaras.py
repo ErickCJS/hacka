@@ -2,11 +2,9 @@
 routes/api/central.py
 API para panel administrativo central
 """
-from flask import Blueprint, request, jsonify, current_app, session
+from flask import Blueprint, request, jsonify, current_app, session, render_template
 from werkzeug.utils import secure_filename
-import os
-import traceback
-import time
+
 
 import controladores.controlador_camara as controlador_camara
 from services.file_service import FileService
@@ -15,6 +13,8 @@ from utils.constants import *
 camaras_bp = Blueprint('camaras', __name__)
 
 # ==========================================
+
+
 
 @camaras_bp.route('/listar', methods=['GET'])
 def obtener_camaras():
@@ -37,10 +37,16 @@ def obtener_camaras():
         return jsonify({"error": "Error al obtener cámaras"}), 500
     
 # ==========================================
-@camaras_bp.route('/actualizar/<int:id_camara>', methods=['PUT'])
+@camaras_bp.route('/actualizar/<string:id_camara>', methods=['PUT'])
 def actualizar_camara(id_camara):
     try:
         data = request.json
+        estado = data.get('estado', 'A')
+        if estado is not None:
+            estado = 'A' if estado == True else 'I'
+        else:
+            estado = 'A'
+        print(estado)
         controlador_camara.actualizar_camara(
             id_camara,
             data.get('nombre_camara'),
@@ -48,12 +54,12 @@ def actualizar_camara(id_camara):
             data.get('latitud'),
             data.get('longitud'),
             data.get('calle'),
-            data.get('estado')
+            estado
         )
-        return jsonify({"message": "Cámara actualizada correctamente"}), 200
+        return jsonify({"code": 1,"message": "Cámara actualizada correctamente"}), 200
     except Exception as e:
         current_app.logger.error(f"Error al actualizar cámara: {e}")
-        return jsonify({"error": "Error al actualizar cámara"}), 500
+        return jsonify({"code": 0,"error": "Error al actualizar cámara"}), 500
     
     
 # ==========================================
@@ -73,6 +79,11 @@ def actualizar_estado_camara(id_camara):
 def crear():
     try:
         data = request.json
+        estado = data.get('estado', 'A')
+        if estado is not None:
+            estado = 'A' if estado == True else 'I'
+        else:
+            estado = 'A'
         controlador_camara.crear_camara(
             data.get('id_camara'),
             data.get('nombre_camara'),
@@ -80,10 +91,9 @@ def crear():
             data.get('latitud'),
             data.get('longitud'),
             data.get('calle'),
-            data.get('estado')
+            estado
         )
-        return jsonify({"message": "Cámara creada correctamente"}), 201
+        return jsonify({"code": 1, "message": "Cámara creada correctamente"}), 201
     except Exception as e:
         current_app.logger.error(f"Error al crear cámara: {e}")
-        return jsonify({"error": "Error al crear cámara"}), 500
-    
+        return jsonify({"code": 0, "error": "Error al crear cámara"}), 500
