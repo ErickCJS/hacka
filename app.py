@@ -21,7 +21,6 @@ from routes.api.recursos import recursos_bp
 from routes.api.configuracion import configuracion_bp
 from routes.api.sectores import sectores_bp
 from routes.api.camaras import camaras_bp
-
 # Importar blueprints Views (Frontend)
 from routes.views.auth_views import auth_views_bp
 from routes.views.denuncia_views import denuncia_views_bp
