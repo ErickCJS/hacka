@@ -1,0 +1,29 @@
+#buscar{
+    border: none;
+    width: 100%;
+}
+
+.in_buscar{
+    border: 2px solid rgb(216, 215, 215);
+    padding: 0.3rem;
+    border-radius: 0.4rem;
+    width: 100%;
+    display: flex;
+}
+
+#buscar:focus{
+    outline: none;
+}
+
+.in_buscar:has(#buscar:focus){
+    outline: 2px solid rgb(165, 162, 162);
+}
+
+.shadow-lg{
+    padding: 1.2rem;
+    border-radius: 0.4rem;
+}
+#map {
+    width: 100%;
+    height: 90%;
+}
