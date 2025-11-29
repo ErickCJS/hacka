@@ -20,6 +20,7 @@ from routes.api.exportacion import exportacion_bp
 from routes.api.recursos import recursos_bp
 from routes.api.configuracion import configuracion_bp
 from routes.api.sectores import sectores_bp
+from routes.api.camaras import camaras_bp
 
 # Importar blueprints Views (Frontend)
 from routes.views.auth_views import auth_views_bp
@@ -106,6 +107,9 @@ def create_app(config_name='default'):
     
     app.register_blueprint(mapas_bp, url_prefix='/api/mapas')
     print("  ✓ /api/mapas")
+    
+    app.register_blueprint(camaras_bp, url_prefix='/api/camaras')
+    print("  ✓ /api/camaras")
     
 
     
