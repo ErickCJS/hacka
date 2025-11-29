@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalle de Denuncia - Hurto Vehicular</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #D32F2F;
+      --primary-light: #E53935;
+      --primary-dark: #C62828;
+      --secondary: #1976D2;
+      --success: #28a745;
+      --danger: #dc3545;
+      --warning: #ffc107;
+      --bg: #f5f7fa;
+      --card: #ffffff;
+      --text-primary: #2c3e50;
+      --text-secondary: #6c757d;
+      --border: #dee2e6;
+    }
+
+    body {
+      background-color: var(--bg);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--text-primary);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .page-title {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .page-title i {
+      color: var(--primary);
+      font-size: 36px;
+    }
+
+    .breadcrumb {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 16px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+
+    .card-header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      padding: 1.5rem 2rem;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .card-header-content h2 {
+      font-size: 24px;
+      margin: 0 0 4px 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .card-header-content p {
+      margin: 0;
+      font-size: 13px;
+      opacity: 0.9;
+    }
+
+    .status-badge {
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .status-pending {
+      background: var(--warning);
+      color: #000;
+    }
+
+    .status-accepted {
+      background: var(--success);
+      color: white;
+    }
+
+    .status-rejected {
+      background: var(--danger);
+      color: white;
+    }
+
+    .card-body {
+      padding: 2rem;
+    }
+
+    .section {
+      margin-bottom: 2.5rem;
+    }
+
+    .section:last-child {
+      margin-bottom: 0;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-bottom: 0.75rem;
+      border-bottom: 3px solid var(--primary);
+    }
+
+    .section-title i {
+      color: var(--primary);
+      font-size: 20px;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .info-item {
+      display: flex;
+      gap: 12px;
+      padding: 1rem;
+      background: #f8f9fa;
+      border-radius: 12px;
+      transition: all 0.3s;
+      border-left: 4px solid var(--primary);
+    }
+
+    .info-item:hover {
+      background: #e9ecef;
+      transform: translateX(5px);
+    }
+
+    .info-item i {
+      color: var(--primary);
+      font-size: 20px;
+      min-width: 24px;
+      margin-top: 2px;
+    }
+
+    .info-content {
+      flex: 1;
+    }
+
+    .info-label {
+      font-weight: 600;
+      color: var(--text-secondary);
+      font-size: 12px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+      letter-spacing: 0.5px;
+    }
+
+    .info-value {
+      color: var(--text-primary);
+      font-size: 15px;
+      word-break: break-word;
+      font-weight: 500;
+    }
+
+    .vehicle-card {
+      background: linear-gradient(135deg, #fff5f5 0%, #fff0f0 100%);
+      border: 2px solid var(--primary);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .vehicle-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--primary);
+    }
+
+    .vehicle-header i {
+      font-size: 28px;
+      color: var(--primary);
+    }
+
+    .vehicle-header h3 {
+      margin: 0;
+      color: var(--text-primary);
+      font-size: 18px;
+    }
+
+    .placa-badge {
+      display: inline-block;
+      background: var(--primary);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 18px;
+      letter-spacing: 2px;
+      margin: 1rem 0;
+      text-align: center;
+      font-family: 'Courier New', monospace;
+    }
+
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .media-item {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .media-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .media-item img,
+    .media-item video {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .audio-player {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      padding: 1.5rem;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .audio-player strong {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+    }
+
+    .audio-player audio {
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+
+    .map-section {
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      margin-bottom: 2rem;
+    }
+
+    .map-header {
+      background: linear-gradient(135deg, var(--secondary) 0%, #1565C0 100%);
+      padding: 1rem 1.5rem;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .map-header h3 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    #map {
+      height: 400px;
+      width: 100%;
+    }
+
+    .map-placeholder {
+      padding: 3rem;
+      text-align: center;
+      color: var(--text-secondary);
+      background: #f8f9fa;
+      height: 400px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .map-placeholder i {
+      font-size: 48px;
+      margin-bottom: 1rem;
+      color: #ced4da;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 14px 32px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, var(--success) 0%, #1e7e34 100%);
+      color: white;
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, var(--danger) 0%, #bd2130 100%);
+      color: white;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-secondary);
+    }
+
+    .empty-state i {
+      font-size: 48px;
+      margin-bottom: 1rem;
+      color: #ced4da;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem;
+      }
+
+      .page-title {
+        font-size: 24px;
+      }
+
+      .card-header {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .card-body {
+        padding: 1.5rem;
+      }
+
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .media-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      }
+
+      .action-buttons {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      #map {
+        height: 300px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1 class="page-title">
+        <i class="fas fa-car-crash"></i>
+        Detalle de Denuncia
+      </h1>
+      <p class="breadcrumb">Revisión y gestión de denuncias vehiculares</p>
+    </div>
+
+    <div id="content">
+      <!-- Se carga dinámicamente -->
+    </div>
+  </div>
+
+  <div class="map-section" id="map-section" style="display: none;">
+    <div class="map-header">
+      <i class="fas fa-map-marker-alt"></i>
+      <h3>Ubicación del incidente</h3>
+    </div>
+    <div id="map"></div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <script>
+    // Obtener ID de la URL
+    const id = window.location.pathname.split('/').pop();
+    const API_URL = '{{BASE_URL}}/api/central/denuncias/detalle/carro';
+
+    fetch(`${API_URL}/${id}`)
+      .then(res => res.json())
+      .then(data => {
+        const d = data.denuncia;
+        renderDenuncia(d);
+      })
+      .catch(error => {
+        document.getElementById('content').innerHTML = `
+          <div class="card">
+            <div class="card-body">
+              <div class="empty-state">
+                <i class="fas fa-exclamation-circle"></i>
+                <p>Error al cargar la denuncia: ${error.message}</p>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+    function renderDenuncia(d) {
+      let statusClass = 'status-pending';
+      let statusText = 'Pendiente';
+      if (d.estado === '2') {
+        statusClass = 'status-accepted';
+        statusText = 'Aceptada';
+      } else if (d.estado === '3') {
+        statusClass = 'status-rejected';
+        statusText = 'Rechazada';
+      }
+
+      const vehiculo = d.vehiculo || {};
+
+      let html = `
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-content">
+              <h2>
+                <i class="fas fa-exclamation-triangle"></i>
+                ${d.denuncia_nombre}
+              </h2>
+              <p>${new Date(d.fecha).toLocaleDateString('es-PE')} a las ${d.hora}</p>
+            </div>
+            <span class="status-badge ${statusClass}">${statusText}</span>
+          </div>
+
+          <div class="card-body">
+            <!-- INFORMACIÓN GENERAL -->
+            <div class="section">
+              <h3 class="section-title">
+                <i class="fas fa-info-circle"></i>
+                Información General
+              </h3>
+              <div class="info-grid">
+                <div class="info-item">
+                  <i class="fas fa-user"></i>
+                  <div class="info-content">
+                    <div class="info-label">Reportado por</div>
+                    <div class="info-value">${d.nombre_completo || 'N/A'}</div>
+                  </div>
+                </div>
+
+                <div class="info-item">
+                  <i class="fas fa-phone"></i>
+                  <div class="info-content">
+                    <div class="info-label">Teléfono</div>
+                    <div class="info-value">${d.numero_celular || 'No disponible'}</div>
+                  </div>
+                </div>
+
+                <div class="info-item">
+                  <i class="fas fa-calendar-alt"></i>
+                  <div class="info-content">
+                    <div class="info-label">Fecha</div>
+                    <div class="info-value">${d.fecha}</div>
+                  </div>
+                </div>
+
+                <div class="info-item">
+                  <i class="fas fa-clock"></i>
+                  <div class="info-content">
+                    <div class="info-label">Hora</div>
+                    <div class="info-value">${d.hora}</div>
+                  </div>
+                </div>
+
+                <div class="info-item">
+                  <i class="fas fa-map-pin"></i>
+                  <div class="info-content">
+                    <div class="info-label">Ubicación</div>
+                    <div class="info-value">${d.ubicacion || 'N/A'}</div>
+                  </div>
+                </div>
+
+                <div class="info-item">
+                  <i class="fas fa-check-circle"></i>
+                  <div class="info-content">
+                    <div class="info-label">Estado</div>
+                    <div class="info-value">${statusText}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- INFORMACIÓN VEHICULAR -->
+            ${vehiculo.placa ? `
+              <div class="section">
+                <h3 class="section-title">
+                  <i class="fas fa-car"></i>
+                  Datos del Vehículo
+                </h3>
+                <div class="vehicle-card">
+                  <div class="vehicle-header">
+                    <i class="fas fa-car-side"></i>
+                    <h3>Información del vehículo</h3>
+                  </div>
+
+                  <div class="placa-badge">${vehiculo.placa}</div>
+
+                  <div class="info-grid">
+                    <div class="info-item">
+                      <i class="fas fa-palette"></i>
+                      <div class="info-content">
+                        <div class="info-label">Color</div>
+                        <div class="info-value">${vehiculo.color || 'No especificado'}</div>
+                      </div>
+                    </div>
+
+                    <div class="info-item">
+                      <i class="fas fa-cube"></i>
+                      <div class="info-content">
+                        <div class="info-label">Tipo de Vehículo</div>
+                        <div class="info-value">${vehiculo.tipo_vehiculo || 'No especificado'}</div>
+                      </div>
+                    </div>
+
+                    <div class="info-item">
+                      <i class="fas fa-phone"></i>
+                      <div class="info-content">
+                        <div class="info-label">Teléfono del Dueño</div>
+                        <div class="info-value">${vehiculo.telefono || 'No disponible'}</div>
+                      </div>
+                    </div>
+
+                    <div class="info-item">
+                      <i class="fas fa-tag"></i>
+                      <div class="info-content">
+                        <div class="info-label">Estado de Denuncia</div>
+                        <div class="info-value">${vehiculo.estado || 'N/A'}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ` : ''}
+
+            <!-- DESCRIPCIÓN -->
+            <div class="section">
+              <h3 class="section-title">
+                <i class="fas fa-align-left"></i>
+                Descripción del Incidente
+              </h3>
+              <div class="info-item">
+                <i class="fas fa-quote-left"></i>
+                <div class="info-content">
+                  <div class="info-value">${d.descripcion || 'Sin descripción disponible'}</div>
+                </div>
+              </div>
+            </div>
+
+            ${vehiculo.descripcion_carro ? `
+              <div class="section">
+                <h3 class="section-title">
+                  <i class="fas fa-info-circle"></i>
+                  Detalles del Vehículo
+                </h3>
+                <div class="info-item">
+                  <i class="fas fa-quote-left"></i>
+                  <div class="info-content">
+                    <div class="info-value">${vehiculo.descripcion_carro}</div>
+                  </div>
+                </div>
+              </div>
+            ` : ''}
+
+            <!-- MULTIMEDIA -->
+            ${d.fotos.length > 0 || d.videos.length > 0 || d.audios.length > 0 ? `
+              <div class="section">
+                <h3 class="section-title">
+                  <i class="fas fa-photo-video"></i>
+                  Material Multimedia
+                </h3>
+
+                ${d.fotos.length > 0 ? `
+                  <div>
+                    <h4 style="font-size: 16px; font-weight: 600; margin-bottom: 1rem; color: var(--text-secondary);">
+                      <i class="fas fa-image"></i> Fotografías (${d.fotos.length})
+                    </h4>
+                    <div class="media-grid">
+                      ${d.fotos.map(foto => `
+                        <div class="media-item">
+                          <img src="${foto}" alt="Foto denuncia" onclick="window.open('${foto}', '_blank')">
+                        </div>
+                      `).join('')}
+                    </div>
+                  </div>
+                ` : ''}
+
+                ${d.videos.length > 0 ? `
+                  <div style="margin-top: 2rem;">
+                    <h4 style="font-size: 16px; font-weight: 600; margin-bottom: 1rem; color: var(--text-secondary);">
+                      <i class="fas fa-video"></i> Videos (${d.videos.length})
+                    </h4>
+                    <div class="media-grid">
+                      ${d.videos.map(video => `
+                        <div class="media-item">
+                          <video controls src="${video}"></video>
+                        </div>
+                      `).join('')}
+                    </div>
+                  </div>
+                ` : ''}
+
+                ${d.audios.length > 0 ? `
+                  <div style="margin-top: 2rem;">
+                    <h4 style="font-size: 16px; font-weight: 600; margin-bottom: 1rem; color: var(--text-secondary);">
+                      <i class="fas fa-volume-up"></i> Audios (${d.audios.length})
+                    </h4>
+                    ${d.audios.map((audio, index) => `
+                      <div class="audio-player">
+                        <strong>Audio ${index + 1}</strong>
+                        <audio controls src="${audio}"></audio>
+                      </div>
+                    `).join('')}
+                  </div>
+                ` : ''}
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      `;
+
+      document.getElementById('content').innerHTML = html;
+
+      // Renderizar mapa
+      if (d.ubicacion && d.ubicacion.includes(',')) {
+        const [lat, lng] = d.ubicacion.split(',').map(coord => parseFloat(coord.trim()));
+        if (!isNaN(lat) && !isNaN(lng)) {
+          document.getElementById('map-section').style.display = 'block';
+          
+          setTimeout(() => {
+            const map = L.map('map').setView([lat, lng], 16);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+              attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
+            
+            const marker = L.marker([lat, lng]).addTo(map);
+            marker.bindPopup(`
+              <strong>${d.denuncia_nombre}</strong><br>
+              ${d.ubicacion}
+            `).openPopup();
+          }, 100);
+        }
+      }
+    }
+  </script>
+</body>
+</html>

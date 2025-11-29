@@ -104,6 +104,49 @@ def obtener_denuncia_detalle(id_denuncia):
         traceback.print_exc()
         return jsonify({"error": f"An error occurred: {str(e)}"}), HTTP_INTERNAL_ERROR
 
+@central_bp.route('/denuncias/detalle/carro/<id_denuncia>', methods=['GET'])
+def obtener_denuncia_detalle_carro(id_denuncia):
+    """Obtiene detalle de una denuncia incluyendo información vehicular si existe"""
+    try:
+        # Obtener datos generales de la denuncia
+        denuncia = controlador_central.obtener_denuncias_por_id(id_denuncia)
+
+        if not denuncia:
+            return jsonify({"message": "No report found with that ID"}), HTTP_NOT_FOUND
+
+        # ===========================
+        # MEDIOS (fotos, videos, audios)
+        # ===========================
+        fotos = controlador_central.obtener_fotos(id_denuncia)
+        videos = controlador_central.obtener_videos(id_denuncia)
+        audios = controlador_central.obtener_audio(id_denuncia)
+
+        denuncia['fotos'] = fotos
+        denuncia['videos'] = videos
+        denuncia['audios'] = audios
+
+        # ===========================
+        # 🔵 NUEVO: obtener datos vehiculares
+        # ===========================
+        import controladores.controlador_denuncia_carro as controlador_denuncia_carro
+        vehiculo = controlador_denuncia_carro.obtener_denuncia_carro(id_denuncia)
+
+        if vehiculo:
+            denuncia['vehiculo'] = {
+                "placa": vehiculo.get("placa"),
+                "color": vehiculo.get("color"),
+                "tipo_vehiculo": vehiculo.get("tipo_vehiculo"),
+                "telefono": vehiculo.get("telefono"),
+                "descripcion_carro": vehiculo.get("descripcion"),
+                "estado": vehiculo.get("estado"),
+            }
+
+        return jsonify({"denuncia": denuncia}), HTTP_OK
+
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({"error": f"An error occurred: {str(e)}"}), HTTP_INTERNAL_ERROR
+
 
 # ============ EMERGENCIAS ============
 @central_bp.route('/emergencias/pendientes/<id>', methods=['GET'])
