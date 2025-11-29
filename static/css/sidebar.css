@@ -16,7 +16,7 @@
   z-index: 10;
   width: 270px;
   height: 100vh;
-  background: #000000; /* Barra lateral verde */
+  background: #6075d6; /* Barra lateral verde */
   transition: all 0.4s ease;
 }
 
@@ -46,7 +46,7 @@
   right: 20px;
   height: 35px;
   width: 35px;
-  color: #000000; /* Cambié el color de los iconos */
+  color: #6075d6; /* Cambié el color de los iconos */
   border: none;
   cursor: pointer;
   display: flex;
@@ -111,12 +111,12 @@
   padding: 11px 15px;
   align-items: center;
   text-decoration: none;
-  border: 1px solid #000000; /* Bordes en verde oscuro */
+  border: 1px solid #6075d6; /* Bordes en verde oscuro */
   transition: 0.4s ease;
 }
 
 .sidebar-nav .nav-item:is(:hover, .open)>.nav-link:not(.dropdown-title) {
-  color: #000000; /* Cambio de color a verde oscuro */
+  color: #6075d6; /* Cambio de color a verde oscuro */
   background: #A5D6A7; /* Fondo al pasar el ratón en verde claro */
 }
 
@@ -137,7 +137,7 @@
   position: absolute;
   bottom: 35px;
   width: 100%;
-  background: #000000; /* Fondo de la barra inferior en verde */
+  background: #6075d6; /* Fondo de la barra inferior en verde */
 }
 
 .sidebar-nav .nav-item {
@@ -172,7 +172,7 @@
   overflow-y: unset;
   pointer-events: none;
   border-radius: 0 10px 10px 0;
-  background: #000000; /* Fondo dropdown verde oscuro */
+  background: #6075d6; /* Fondo dropdown verde oscuro */
   transition: 0s;
 }
 

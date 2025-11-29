@@ -26,16 +26,19 @@ def validar_id_denuncia(id_denuncia):
         conexion = obtener_conexion()
         cursor = conexion.cursor()
 
+        # Ajusta la consulta para verificar si el ID existe
         sql = "SELECT id_denuncia from incidencia WHERE id_incidencia = %s"
         cursor.execute(sql, (id_denuncia,))
         resultado = cursor.fetchone()
         conexion.close()
         
-        return resultado is not None
+        # Si se encuentra el resultado, devuelve el id_denuncia
+        return resultado['id_denuncia'] if resultado else None  # Retorna el id_denuncia o None
     
     except Exception as e:
         print("[ERROR al validar id_denuncia]", e)
-        return False
+        return None
+
     
 def obtener_denuncia_carro(id_denuncia):
     try:
