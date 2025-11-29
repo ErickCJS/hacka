@@ -3,7 +3,7 @@ routes/views/denuncia_views.py
 Vistas de denuncias (Frontend)
 """
 from flask import Blueprint, render_template, session, redirect, url_for
-
+import controladores.controlador_camara as contc
 denuncia_views_bp = Blueprint('denuncia_views', __name__)
 
 
@@ -50,3 +50,8 @@ def detalle_denuncia(id):
 def detalle_denuncias(id):
     """Detalle de denuncia (con edición)"""
     return render_template('denuncias/detalle_denuncia.html', id=id, vision=True)
+
+@denuncia_views_bp.route('/gestionar_camaras')
+def gestionar_camaras():
+    camaras = contc.listar_camara()
+    return render_template('camaras/gestion_camaras.html', camaras=camaras)

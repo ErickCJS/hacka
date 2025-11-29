@@ -63,3 +63,5 @@ def gestion_recursos():
 def trazabilidad():
     """Página de trazabilidad de sectores"""
     return render_template('admin/trazabilidad.html')
+
+

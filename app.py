@@ -16,7 +16,7 @@ from routes.api.denuncias import denuncias_bp
 from routes.api.emergencias import emergencias_bp
 from routes.api.central import central_bp
 from routes.api.mapas import mapas_bp
-from routes.api.exportacion import exportacion_bp
+#from routes.api.exportacion import exportacion_bp
 from routes.api.recursos import recursos_bp
 from routes.api.configuracion import configuracion_bp
 from routes.api.sectores import sectores_bp
@@ -113,8 +113,8 @@ def create_app(config_name='default'):
     
 
     
-    app.register_blueprint(exportacion_bp, url_prefix='/api/exportar')
-    print("  ✓ /api/exportar")
+    #app.register_blueprint(exportacion_bp, url_prefix='/api/exportar')
+    #print("  ✓ /api/exportar")
     
     app.register_blueprint(recursos_bp, url_prefix='/api/recursos')
     print("  ✓ /api/recursos")
